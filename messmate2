@@ -1,0 +1,62 @@
+-- Database: messmate2
+CREATE DATABASE IF NOT EXISTS messfeast;
+USE messmate2;
+
+-- Table: students
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    password VARCHAR(255) NOT NULL
+);
+
+-- Table: admin
+CREATE TABLE admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+-- Table: menu
+CREATE TABLE menu (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(6,2) NOT NULL,
+    day_of_week VARCHAR(20) NOT NULL
+);
+
+-- Table: orders
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(8,2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pending',
+    FOREIGN KEY (student_id) REFERENCES students(id)
+);
+
+-- Table: order_items
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    menu_item_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (menu_item_id) REFERENCES menu(id)
+);
+
+-- Insert Default Admin
+INSERT INTO admin (username, password) VALUES ('admin', MD5('admin123'));
+
+-- Insert Sample Menu Items
+INSERT INTO menu (item_name, description, price, day_of_week) VALUES
+('Poha', 'Light breakfast with lemon and peanuts', 20.00, 'Monday'),
+('Aloo Paratha', 'Stuffed potato paratha with curd', 35.00, 'Monday'),
+('Pav Bhaji', 'Spicy mixed vegetable curry with buns', 40.00, 'Tuesday'),
+('Chole Bhature', 'Chickpea curry with fried bread', 50.00, 'Wednesday'),
+('Fried Rice', 'Veg fried rice with sauces', 45.00, 'Thursday'),
+('Dosa', 'Crispy South Indian dosa with chutney', 30.00, 'Friday'),
+('Paneer Butter Masala', 'Cottage cheese curry with naan', 70.00, 'Saturday'),
+('Chicken Biryani', 'Spicy rice with marinated chicken', 80.00, 'Sunday');
